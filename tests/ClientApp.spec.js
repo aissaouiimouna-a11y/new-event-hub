@@ -1,24 +1,31 @@
-const {test, expect} = require('@playwright/test');
+import { test, expect } from '@playwright/test';
+import { ClientLoginPage } from '../pages/ClientLoginPage';
+import { ProductsPage } from '../pages/ProductsPage';
+import { CartPage } from '../pages/CartPage';
 
-test("@webtest clientapp login", async ({page}) => {
+test.describe('@webtest clientapp login', () => {
+  test('ajoute un produit au panier et passe la commande', async ({ page }) => {
+    const email = 'aissaouiimouna@gmail.com';
+    const password = 'Taissaoui123';
+    const productName = 'ZARA COAT 3';
 
-    const email = "aissaouiimouna@gmail.com";
-    const password = "Taissaoui123";
-    const productName = "ZARA COAT 3";
-    const products = page.locator('.card-body');
+    const loginPage = new ClientLoginPage(page);
+    const productsPage = new ProductsPage(page);
+    const cartPage = new CartPage(page);
 
-    await page.goto('https://rahulshettyacademy.com/client');
-    await page.locator('#userEmail').fill(email);
-    await page.locator('#userPassword').fill(password);
-    await page.getByRole('button', { name: 'Login' }).click();
+    await loginPage.goto();
+    await loginPage.login(email, password);
 
-    await page.locator('.card-body b').first().waitFor();
-    const titles = await page.locator('.card-body b').allTextContents();
-    console.log(titles);
+    await productsPage.waitForProductsToLoad();
+    console.log(await productsPage.getProductTitles());
 
-    expect(titles).toContain(productName);
+    await productsPage.addToCart(productName);
+    await productsPage.goToCart();
 
-    const count = await products.count();
-    console.log(count);
-    expect(count).toBeGreaterThan(0);
+    await cartPage.waitForItems();
+    expect(await cartPage.isProductInCart(productName)).toBeTruthy();
+
+    await cartPage.checkout('ind');
+    expect(await cartPage.isOrderConfirmed()).toBeTruthy();
+  });
 });

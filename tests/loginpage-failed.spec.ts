@@ -1,36 +1,29 @@
 import { test, expect } from '@playwright/test';
+import { LoginPracticePage } from '../pages/LoginPracticePage';
 
-const LOGIN_URL = 'https://rahulshettyacademy.com/loginpagePractise/';
+test.describe('Login - identifiants invalides', () => {
+  let loginPage: LoginPracticePage;
 
-test('1.2.a - invalid username with valid password', async ({ page }) => {
-  await page.goto(LOGIN_URL);
-  await page.locator('#username').fill('wronguser123');
-  await page.locator('#password').fill('Learning@830$3mK2');
-  await page.locator('input[type="checkbox"]').check();
-  await page.getByRole('button', { name: 'Sign In' }).click();
+  test.beforeEach(async ({ page }) => {
+    loginPage = new LoginPracticePage(page);
+    await loginPage.goto();
+  });
 
-  await expect(page).toHaveURL(LOGIN_URL);
-  await expect(page.locator('.alert-danger')).toBeVisible();
-});
+  test('1.2.a - invalid username with valid password', async ({ page }) => {
+    await loginPage.login('wronguser123', 'Learning@830$3mK2');
+    await expect(page).toHaveURL(LoginPracticePage.url);
+    expect(await loginPage.isErrorVisible()).toBeTruthy();
+  });
 
-test('1.2.b - valid username with invalid password', async ({ page }) => {
-  await page.goto(LOGIN_URL);
-  await page.locator('#username').fill('rahulshettyacademy');
-  await page.locator('#password').fill('WrongPassword123!');
-  await page.locator('input[type="checkbox"]').check();
-  await page.getByRole('button', { name: 'Sign In' }).click();
+  test('1.2.b - valid username with invalid password', async ({ page }) => {
+    await loginPage.login('rahulshettyacademy', 'WrongPassword123!');
+    await expect(page).toHaveURL(LoginPracticePage.url);
+    expect(await loginPage.isErrorVisible()).toBeTruthy();
+  });
 
-  await expect(page).toHaveURL(LOGIN_URL);
-  await expect(page.locator('.alert-danger')).toBeVisible();
-});
-
-test('1.2.c - both username and password invalid', async ({ page }) => {
-  await page.goto(LOGIN_URL);
-  await page.locator('#username').fill('wronguser123');
-  await page.locator('#password').fill('WrongPassword123!');
-  await page.locator('input[type="checkbox"]').check();
-  await page.getByRole('button', { name: 'Sign In' }).click();
-
-  await expect(page).toHaveURL(LOGIN_URL);
-  await expect(page.locator('.alert-danger')).toBeVisible();
+  test('1.2.c - both username and password invalid', async ({ page }) => {
+    await loginPage.login('wronguser123', 'WrongPassword123!');
+    await expect(page).toHaveURL(LoginPracticePage.url);
+    expect(await loginPage.isErrorVisible()).toBeTruthy();
+  });
 });
