@@ -1,6 +1,6 @@
 const {test, expect} = require('@playwright/test');
 
-test.only("@webtest clientapp login", async ({page}) => {
+test("@webtest clientapp login", async ({page}) => {
 
     const email = "aissaouiimouna@gmail.com";
     const password = "Taissaoui123";
@@ -20,7 +20,7 @@ test.only("@webtest clientapp login", async ({page}) => {
     await page.locator('[routerlink="/dashboard/cart"]').click();
     await page.locator('div li').first().waitFor();
 
-    const bool = await page.getByText(productName).isVisible();
+    const bool = await page.getByText(productName).first().isVisible();
     expect(bool).toBeTruthy();
 
     await page.getByText('Checkout').click();

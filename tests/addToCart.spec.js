@@ -1,10 +1,10 @@
-const { test, expect } = require('@playwright/test');
+﻿const { test, expect } = require('@playwright/test');
 
 test('adds a product to the cart from the GreenKart shop', async ({ page }) => {
   await page.goto('https://rahulshettyacademy.com/seleniumPractise/#/');
 
   const productName = 'Cauliflower - 1 Kg';
-  const productCard = page.locator('div').filter({ has: page.getByRole('heading', { name: productName }) }).filter({ has: page.getByRole('button', { name: 'ADD TO CART' }) }).first();
+  const productCard = page.locator('.product').filter({ has: page.getByRole('heading', { name: productName }) });
 
   await expect(productCard).toBeVisible();
   await productCard.getByRole('button', { name: 'ADD TO CART' }).click();

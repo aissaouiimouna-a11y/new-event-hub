@@ -22,7 +22,7 @@ test('@webtest clientapp login', async ({ page }) => {
 
   await test.step('Validate the cart and place the order', async () => {
     await page.locator('[routerlink="/dashboard/cart"]').click();
-    await expect(page.getByText(productName)).toBeVisible();
+    await expect(page.getByText(productName).first()).toBeVisible();
     await page.getByText('Checkout').click();
     await page.getByPlaceholder('Select Country').pressSequentially('ind', { delay: 150 });
     await page.getByRole('button', { name: 'India' }).nth(1).click();
