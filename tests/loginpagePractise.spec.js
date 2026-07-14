@@ -1,11 +1,7 @@
-import { test, expect } from '@playwright/test';
-import { LoginPracticePage, VALID_USERNAME, VALID_PASSWORD } from '../pages/LoginPracticePage';
+import { test, expect } from '../fixtures/authFixtures';
 
-test('logs in and verifies the iPhone X product', async ({ page }) => {
-  const loginPage = new LoginPracticePage(page);
-  await loginPage.goto();
-  await loginPage.login(VALID_USERNAME, VALID_PASSWORD);
-  await expect(page).toHaveURL(/shop/);
-  await page.waitForLoadState('networkidle');
-  await expect(page.getByText('iPhone X')).toBeVisible();
+test('logs in and verifies the iPhone X product', async ({ loggedInPage }) => {
+  await expect(loggedInPage.page).toHaveURL(/shop/);
+  await loggedInPage.page.waitForLoadState('networkidle');
+  await expect(loggedInPage.page.getByText('iPhone X')).toBeVisible();
 });
