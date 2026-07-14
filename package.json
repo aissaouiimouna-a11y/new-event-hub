@@ -2,13 +2,20 @@
   "name": "playrighttest",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+  "test": "playwright test",
+  "test:dev": "cross-env ENV=dev playwright test",
+  "test:qa": "cross-env ENV=qa playwright test",
+  "test:preprod": "cross-env ENV=preprod playwright test"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
     "@playwright/test": "^1.61.1",
-    "@types/node": "^26.1.0"
+    "@types/node": "^26.1.0",
+    "cross-env": "^10.1.0",
+    "dotenv": "^17.4.2"
   }
 }

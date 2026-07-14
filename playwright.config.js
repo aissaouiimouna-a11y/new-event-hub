@@ -1,5 +1,11 @@
+
 // @ts-check
 import { chromium, defineConfig, devices } from '@playwright/test';
+import * as dotenv from 'dotenv';
+import * as path from 'path';
+
+const environment = process.env.ENV || 'dev';
+dotenv.config({ path: path.resolve(process.cwd(), `.env.${environment}`) });
 
 const config = ({
   testDir: './tests',
@@ -8,12 +14,12 @@ const config = ({
   expect: {
     timeout: 10000,
   },
-  /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     browserName: 'chromium',
     headless: true,
     screenshot: 'only-on-failure',
     trace: 'on-first-retry',
+    baseURL: process.env.BASE_URL,
   },
   projects: [
     {
